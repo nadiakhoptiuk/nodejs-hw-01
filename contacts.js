@@ -11,6 +11,14 @@ async function readListOfContacts() {
   return JSON.parse(list);
 }
 
+async function writeContactsToFile(array) {
+  return await fsPromises.writeFile(
+    `${contactsPath}`,
+    `${JSON.stringify(array)}`,
+    "utf-8"
+  );
+}
+
 async function getContactsList() {
   try {
     const list = await readListOfContacts();
@@ -55,14 +63,10 @@ async function removeContactById(contactId) {
       (contact) => contact.id !== contactId.toString()
     );
 
-    await fsPromises.writeFile(
-      `${contactsPath}`,
-      `${JSON.stringify(newListCreated)}`,
-      "utf-8"
-    );
+    await writeContactsToFile(newListCreated);
 
-    const newListArr = await fsPromises.readFile(`${contactsPath}`, "utf-8");
-    console.table(JSON.parse(newListArr));
+    const newListArr = await readListOfContacts();
+    console.table(newListArr);
   } catch (error) {
     console.error(`\x1B[31m${error.message}`);
   }
@@ -76,16 +80,13 @@ async function addContact(name, email, phone) {
     const list = await readListOfContacts();
     const id = shortId.generate();
 
-    const newContact = { name, email, phone, id };
+    const newContact = { id, name, email, phone };
     const newListCreated = [...list, newContact];
 
-    await fsPromises.writeFile(
-      `${contactsPath}`,
-      `${JSON.stringify(newListCreated)}`,
-      "utf-8"
-    );
+    await writeContactsToFile(newListCreated);
 
-    const newListArr = await fsPromises.readFile(`${contactsPath}`, "utf-8");
+    const newListArr = await readListOfContacts();
+    console.table(newListArr);
   } catch (error) {
     console.error(`\x1B[31m${error.message}`);
   }
