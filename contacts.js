@@ -15,7 +15,6 @@ async function getContactsList() {
   try {
     const list = await readListOfContacts();
     console.table(list);
-    return list;
   } catch (error) {
     console.error(error.message);
   }
@@ -34,7 +33,6 @@ async function getContactById(contactId) {
     }
 
     console.log(defineContact);
-    return defineContact;
   } catch (error) {
     console.error(`${error.message}`);
   }
@@ -65,7 +63,6 @@ async function removeContactById(contactId) {
 
     const newListArr = await fsPromises.readFile(`${contactsPath}`, "utf-8");
     console.table(JSON.parse(newListArr));
-    return JSON.parse(newListArr);
   } catch (error) {
     console.error(`\x1B[31m${error.message}`);
   }
@@ -89,8 +86,6 @@ async function addContact(name, email, phone) {
     );
 
     const newListArr = await fsPromises.readFile(`${contactsPath}`, "utf-8");
-    console.table(JSON.parse(newListArr));
-    return JSON.parse(newListArr);
   } catch (error) {
     console.error(`\x1B[31m${error.message}`);
   }
